@@ -2,10 +2,10 @@ const { Pool } = require('pg');
 const Router = require('express-promise-router');
 
 const pool = new Pool({
-  user: 'fredyb',
+  user: 'postgres',
   host: 'localhost',
   database: 'postgres',
-  password: 'univalle',
+  password: 'mypassword',
   port: 5432,
 });
 
@@ -25,4 +25,20 @@ router.post('/insertarpacientes', async (req, res) => {
     `INSERT INTO pacientes(nombre, apellido, numid) VALUES('${nombre}','${apellido}','${numid}')`
   );
   res.send('INSERTADO');
+});
+
+router.delete('/borrarpacientes', async (req, res) => {
+  const { nombre, apellido, numid } = req.body;
+  await pool.query(
+    `DELETE FROM pacientes WHERE numid='${numid}';`
+  );
+  res.send('BORRADO');
+});
+
+router.post('/actualizarpacientes', async (req, res) => {
+  const { nombre, apellido, numid } = req.body;
+  await pool.query(
+    `UPDATE pacientes SET nombre = '${nombre}', apellido = '${apellido}', numid = '${numid}' WHERE numid='${numid}';`
+  );
+  res.send('MODIFICADO');
 });
